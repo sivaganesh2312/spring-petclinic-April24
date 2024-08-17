@@ -1,0 +1,17 @@
+---
+
+pool:
+  name: Default
+
+trigger:
+  - main
+
+steps:
+  - task: Docker@2
+    displayName: 'Build docker image and push to repository'
+    inputs:
+      command: buildAndPush
+      Dockerfile: 'Dockerfile'
+      containerRegistry: 'dockerhubsc'
+      repository: 'ganesh231/augest24'
+      tags: '$(Build.BuildId)'
