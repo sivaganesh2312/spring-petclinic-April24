@@ -8,8 +8,8 @@ pipeline {
     stages {
         stage('scm') {
             steps {
-                git url: 'https://github.com/dummyrepos/nopCommerceApr24.git',
-                    branch: 'develop'
+                git url: 'https://github.com/sivaganesh2312/spring-petclinic-April24.git',
+                    branch: 'main'
             }
         }
         stage('build') {
