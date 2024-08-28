@@ -1,21 +1,23 @@
 pipeline {
-  agent { label 'spc' }
-  stages {
-    stage('git') {
-          steps {
-            git url: 'https://github.com/spring-projects/spring-petclinic.git', branch: 'main'
-          }
+    agent {
+        label 'nop'
     }
-    stage('build') {
-      steps {
-        mail bcc: '', body: 'Build started', cc: '', from: '', replyTo: '', subject: 'build started', to: 'all@learningthought.io'
-        sh 'mvn clean package'
-        junit testResults: '**/surefire-reports/*.xml'
-        archive '**/target/spring-petclinic-*.jar'
-        mail bcc: '', body: 'Build completed', cc: '', from: '',replyTo: '', subject: 'build completed', to: 'all@learningthought.io'
-      }
+    triggers {
+        pollSCM('* * * * *')
     }
- 
-  }
+    stages {
+        stage('scm') {
+            steps {
+                git url: 'https://github.com/dummyrepos/nopCommerceApr24.git',
+                    branch: 'develop'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'dotnet publish -o published/ -c Release src/Presentation/Nop.Web/Nop.Web.csproj'
 
+            }
+        }
+
+    }
 }
