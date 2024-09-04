@@ -2,6 +2,7 @@ pipeline {
   agent any
   tools {
 	  maven 'MAVEN_3.9.9'
+  	  jfrog 'jfrog-cli'
   }
   triggers {
 	  pollSCM('* * * * *')
@@ -21,6 +22,20 @@ pipeline {
 			    archive '**/target/spring-petclinic-*.jar'
 		}
 	}
+	stage('Exec Maven commands') {
+        steps {
+            // Configure Maven project's repositories
+            jf 'mvn-config --repo-resolve-releases maven123-libs-release --repo-resolve-snapshots maven123-libs-snapshot --repo-deploy-releases-maven123-libs-release-local --repo-deploy-snapshots maven123-libs-snapshot-local'
+            // Install and publish project
+            jf 'mvn clean install'
+        }
+    }
+	stage('Publish build info') {
+    	steps {
+        	jf 'rt build-publish'
+        }
+    }
+        
 	stage("Quality Gate") {
     	steps {
         	timeout(time: 1, unit: 'HOURS') {
